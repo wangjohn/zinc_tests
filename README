@@ -1,0 +1,10 @@
+Zinc Tests
+==========
+
+Must install nose:
+
+```
+pip install nose
+```
+
+If that doesn't work, read the documentation for nose: `http://nose.readthedocs.org/en/latest/`.
