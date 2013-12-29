@@ -54,7 +54,14 @@ class TestVariantOptions(ZincSuite):
         nose.tools.assert_equals("variant_options_response", result["_type"])
         nose.tools.assert_equals(retailer, result["retailer"])
         nose.tools.assert_equals(url, result["product_url"])
-        assert result["variant_options"] != None
+        nose.tools.assert_is_not_none(result["variant_options"])
+        nose.tools.assert_greater_equal(len(result["variant_options"]), 0)
+
+        for variant_option in result["variant_options"]:
+            nose.tools.assert_equals("variant_option", variant_option["_type"])
+            nose.tools.assert_greater_equal(variant_option["unit_price"], 0)
+            nose.tools.assert_is_not_none(variant_option["product_id"])
+            nose.tools.assert_is_not_none(variant_option["dimensions"])
 
     def generate_product_url(self, retailer):
         retailer_urls = self.product_urls[retailer]
