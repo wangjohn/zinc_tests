@@ -2,7 +2,7 @@ import requests
 import json
 
 class ZincSuite:
-    num_tests = 500
+    num_tests = 1
 
     def post_request(self, url, payload):
         result = requests.post(url, data=json.dumps(payload))
