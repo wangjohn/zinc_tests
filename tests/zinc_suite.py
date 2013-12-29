@@ -7,17 +7,23 @@ class ZincSuite:
     num_tests = 1
     zinc_base_url = "https://demotwo.zinc.io/v0"
     zinc_url_stub = None
-    data_filename = None
+    data_filenames = None
+    test_data_path = os.path.join(os.path.dirname(__file__), "../test_data/")
 
     def read_data(self):
-        if self.data_filename == None:
-            self.data_filename = os.path.join(os.path.dirname(__file__),
-                "../test_data/", self.zinc_url_stub + ".csv")
+        if self.data_filenames == None:
+            filenames = [os.path.join(self.test_data_path,
+                self.zinc_url_stub + ".csv")]
+        else:
+            filenames = []
+            for filename_stub in self.data_filenames:
+                filenames.append(os.path.join(self.test_data_path, filename_stub))
 
-        with open(self.data_filename, "rb") as csvfile:
-            reader = csv.reader(csvfile, delimiter=",")
-            for line in reader:
-                yield line
+        for filename in filenames:
+            with open(filename, "rb") as csvfile:
+                reader = csv.reader(csvfile, delimiter=",")
+                for line in reader:
+                    yield line, filename
 
     def current_url(self):
         if self.zinc_url_stub:

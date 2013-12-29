@@ -8,7 +8,7 @@ class TestVariantOptions(zinc_suite.ZincSuite):
 
     def process_data(self):
         data = collections.defaultdict(list)
-        for line in self.read_data():
+        for line, filename in self.read_data():
             data[line[0]].append(line[1])
         return data
 
