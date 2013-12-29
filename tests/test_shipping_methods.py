@@ -34,10 +34,10 @@ class TestShippingMethods(zinc_suite.ZincSuite):
             "products": products,
             "shipping_address": shipping_address
             }
-        result = self.post_request(self.zinc_url, payload)
-        self.verify_response(retailer, self.zinc_url, result)
+        result = self.post_request(payload)
+        self.verify_response(retailer, result)
 
-    def verify_response(self, retailer, url, result):
+    def verify_response(self, retailer, result):
         # TODO: write this verification
         pass
 

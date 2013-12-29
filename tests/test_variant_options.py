@@ -3,7 +3,7 @@ import nose.tools
 import zinc_suite
 
 class TestVariantOptions(zinc_suite.ZincSuite):
-    zinc_url = "https://demotwo.zinc.io/v0/variant_options"
+    zinc_url_stub = "variant_options"
 
     macys_product_urls = [
         "http://www1.macys.com/shop/product/nike-dri-fit-shirt-swoosh-tennis-polo?ID=797196",
@@ -30,7 +30,7 @@ class TestVariantOptions(zinc_suite.ZincSuite):
             "retailer": retailer,
             "product_url": url
             }
-        result = self.post_request(self.zinc_url, payload)
+        result = self.post_request(payload)
         self.verify_response(retailer, url, result)
 
     def verify_response(self, retailer, url, result):
