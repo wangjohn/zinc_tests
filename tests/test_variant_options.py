@@ -1,25 +1,8 @@
-import requests
-import json
 import random
 import nose.tools
+import zinc_suite
 
-class ZincSuite:
-    num_tests = 500
-
-    def post_request(self, url, payload):
-        result = requests.post(url, data=json.dumps(payload))
-        request_id = result.json()["request_id"]
-        return self.wait_for_response(url, request_id)
-
-    def wait_for_response(self, url, request_id):
-        result = requests.get(url + "/" + request_id)
-        result_json = result.json()
-        if result_json["_type"] == "error" and result_json["code"] == "request_processing":
-            return self.wait_for_response(url, request_id)
-        else:
-            return result_json
-
-class TestVariantOptions(ZincSuite):
+class TestVariantOptions(zinc_suite.ZincSuite):
     zinc_url = "https://demotwo.zinc.io/v0/variant_options"
 
     macys_product_urls = [
@@ -62,6 +45,9 @@ class TestVariantOptions(ZincSuite):
             nose.tools.assert_greater_equal(variant_option["unit_price"], 0)
             nose.tools.assert_is_not_none(variant_option["product_id"])
             nose.tools.assert_is_not_none(variant_option["dimensions"])
+            for dimension in variant_option["dimensions"]:
+                nose.tools.assert_is_not_none(dimension["name"])
+                nose.tools.assert_is_not_none(dimension["value"])
 
     def generate_product_url(self, retailer):
         retailer_urls = self.product_urls[retailer]
