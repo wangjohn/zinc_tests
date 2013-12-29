@@ -4,6 +4,7 @@ import json
 class ZincSuite:
     num_tests = 1
     zinc_base_url = "https://demotwo.zinc.io/v0"
+    zinc_url_stub = None
 
     def current_url(self):
         if self.zinc_url_stub:

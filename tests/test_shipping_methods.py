@@ -3,7 +3,7 @@ import nose.tools
 import zinc_suite
 
 class TestShippingMethods(zinc_suite.ZincSuite):
-    zinc_url = "https://demotwo.zinc.io/v0/shipping_methods"
+    zinc_url_stub = "shipping_methods"
 
     num_products_range = [1,5]
 
