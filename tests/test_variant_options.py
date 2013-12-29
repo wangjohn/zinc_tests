@@ -1,31 +1,25 @@
 import random
 import nose.tools
 import zinc_suite
+import collections
 
 class TestVariantOptions(zinc_suite.ZincSuite):
     zinc_url_stub = "variant_options"
 
-    macys_product_urls = [
-        "http://www1.macys.com/shop/product/nike-dri-fit-shirt-swoosh-tennis-polo?ID=797196",
-        "http://www1.macys.com/shop/product/puma-shirt-ferrari-shield-polo?ID=604407",
-        "http://www1.macys.com/shop/product/greg-norman-for-tasso-elba-golf-shirt-short-sleeve-heathered-striped-performance-polo?ID=952548",
-        "http://www1.macys.com/shop/product/perry-ellis-portfoilio-travel-kit?ID=717903",
-        "http://www1.macys.com/shop/product/kenneth-cole-reaction-colombian-leather-single-gusset-messenger-bag?ID=276906",
-        "http://www1.macys.com/shop/product/7-for-all-mankind-jeans-kimmie-straight-leg-la-verna-lake-wash?ID=1046946",
-        "http://www1.macys.com/shop/product/levis-529-curvy-bootcut-jeans-right-on-blue-wash?ID=695171"
-        ]
-
-    product_urls = {
-        "macys": macys_product_urls
-        }
+    def process_data(self):
+        data = collections.defaultdict(list)
+        for line in self.read_data():
+            data[line[0]].append(line[1])
+        return data
 
     def test_variant_options(self):
+        product_urls = self.process_data()
         for i in xrange(self.num_tests):
-            retailer = random.sample(self.product_urls.keys(), 1)[0]
-            self.run_single(retailer)
+            retailer = random.sample(product_urls.keys(), 1)[0]
+            self.run_single(retailer, product_urls)
 
-    def run_single(self, retailer):
-        url = self.generate_product_url(retailer)
+    def run_single(self, retailer, product_urls):
+        url = self.generate_product_url(retailer, product_urls)
         payload = {
             "retailer": retailer,
             "product_url": url
@@ -49,6 +43,6 @@ class TestVariantOptions(zinc_suite.ZincSuite):
                 nose.tools.assert_is_not_none(dimension["name"])
                 nose.tools.assert_is_not_none(dimension["value"])
 
-    def generate_product_url(self, retailer):
-        retailer_urls = self.product_urls[retailer]
+    def generate_product_url(self, retailer, product_urls):
+        retailer_urls = product_urls[retailer]
         return random.sample(retailer_urls, 1)[0]

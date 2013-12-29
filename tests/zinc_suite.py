@@ -1,10 +1,23 @@
 import requests
 import json
+import os
+import csv
 
 class ZincSuite:
     num_tests = 1
     zinc_base_url = "https://demotwo.zinc.io/v0"
     zinc_url_stub = None
+    data_filename = None
+
+    def read_data(self):
+        if self.data_filename == None:
+            self.data_filename = os.path.join(os.path.dirname(__file__),
+                "../test_data/", self.zinc_url_stub + ".csv")
+
+        with open(self.data_filename, "rb") as csvfile:
+            reader = csv.reader(csvfile, delimiter=",")
+            for line in reader:
+                yield line
 
     def current_url(self):
         if self.zinc_url_stub:
