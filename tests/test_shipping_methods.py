@@ -39,7 +39,7 @@ class TestShippingMethods(zinc_suite.ZincSuite):
 
     def verify_response(self, retailer, result):
         print result
-        nose.tools.assert_equals("shipping_methods_reponse", result["_type"])
+        nose.tools.assert_equals("shipping_methods_response", result["_type"])
         nose.tools.assert_equals(retailer, result["retailer"])
         nose.tools.assert_is_not_none(result["shipping_methods"])
         nose.tools.assert_greater_equal(len(result["shipping_methods"]), 0)
