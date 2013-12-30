@@ -2,8 +2,10 @@ from test_store_card import TestStoreCard
 from test_variant_options import TestVariantOptions
 from test_shipping_methods import TestShippingMethods
 import random
+import zinc_suite
 
-class TestFullOrderIntegration:
+class TestFullOrderIntegration(zinc_suite.ZincSuite):
+    zinc_url_stub = "review_order"
 
     def create_klasses(self):
         klasses = {}
@@ -50,6 +52,8 @@ class TestFullOrderIntegration:
                 "payment_method": selected_payment_method,
                 "customer_email": email_address
                 }
+        result = self.post_request(review_order_payload)
+        return result
 
     def select_retailer(self, variant_options_results, klasses):
         return variant_options_results["retailer"]
