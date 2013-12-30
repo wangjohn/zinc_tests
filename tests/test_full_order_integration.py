@@ -16,9 +16,8 @@ class TestFullOrderIntegration:
 
     def process_data(self, klasses):
         data = {}
-        data["store_card"] = klasses["store_card"].process_data()
-        data["variant_options"] = klasses["variant_options"].process_data()
-        data["shipping_methods"] = klasses["shipping_methods"].process_data()
+        for klass_type, klass in klasses.iteritems():
+            data[klass_type] = klass.process_data()
         return data
 
     def test_full_order_integration(self):
@@ -26,8 +25,12 @@ class TestFullOrderIntegration:
         data = self.process_data(klasses)
 
         for i in xrange(self.num_tests):
-            klasses["store_card"].run_single(data["store_card"])
-            klasses["variant_options"].run_single(data["variant_options"])
-            klasses["shipping_methods"].run_single(data["shipping_methods"])
+            self.run_single(klasses, data)
 
+    def run_review_order(self, klasses, data):
+        result = {}
+        for klass_type, klass in klasses.iteritems():
+            result[klass_type] = klass.run_single(data[klass_type])
+
+        #TODO: I think I actually have to run something from beginning to end.
 
