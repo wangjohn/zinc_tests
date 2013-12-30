@@ -4,7 +4,7 @@ Zinc Tests
 Installation
 ============
 
-Must install nose:
+The only thing that this test suite requires is to install nose:
 
 ```
 pip install nose
