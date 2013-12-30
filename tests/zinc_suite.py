@@ -2,6 +2,16 @@ import requests
 import json
 import os
 import csv
+import logging
+import time
+
+def create_logger(filename):
+    full_path = os.path.join(os.path.dirname(__file__), "../logs/", filename)
+    logging.basicConfig(filename=full_path, level=logging.DEBUG, 
+            format='%(asctime)s|%(name)s|%(levelname)s||%(message)s',
+            datefmt='%m/%d/%Y %I:%M:%S%p')
+    logger = logging.getLogger(__name__)
+    return logger
 
 class ZincSuite:
     num_tests = 1
@@ -9,6 +19,7 @@ class ZincSuite:
     zinc_url_stub = None
     data_filenames = None
     test_data_path = os.path.join(os.path.dirname(__file__), "../test_data/")
+    logger = create_logger("tests.log")
 
     def read_data(self):
         if self.data_filenames == None:
@@ -32,14 +43,20 @@ class ZincSuite:
             return self.zinc_base_url
 
     def post_request(self, payload):
+        self.logger.warn("Posting request. Url: %s, data: %s", self.current_url(), payload)
+        start_time = time.clock()
         result = requests.post(self.current_url(), data=json.dumps(payload))
         request_id = result.json()["request_id"]
-        return self.wait_for_response(self.current_url(), request_id)
+        self.logger.warn("Request posted. Request id: %s", request_id)
+        return self.wait_for_response(self.current_url(), request_id, start_time)
 
-    def wait_for_response(self, url, request_id):
+    def wait_for_response(self, url, request_id, start_time):
         result = requests.get(url + "/" + request_id)
         result_json = result.json()
         if result_json["_type"] == "error" and result_json["code"] == "request_processing":
-            return self.wait_for_response(url, request_id)
+            return self.wait_for_response(url, request_id, start_time)
         else:
+            end_time = time.clock()
+            self.logger.warn("Request '%s' time: %s", request_id, end_time - start_time)
+            self.logger.warn("Received response: %s", result_json)
             return result_json
