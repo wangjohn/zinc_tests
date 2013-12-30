@@ -21,12 +21,13 @@ class TestShippingMethods(zinc_suite.ZincSuite):
         return (shipping_methods, shipping_addresses)
 
     def test_shipping_methods(self):
-        (product_ids, shipping_addresses) = self.process_data()
+        data = self.process_data()
         for i in xrange(self.num_tests):
-            retailer = random.sample(product_ids.keys(), 1)[0]
-            self.run_single(retailer, product_ids, shipping_addresses)
+            self.run_single(data)
 
-    def run_single(self, retailer, product_ids, shipping_addresses):
+    def run_single(self, data):
+        (product_ids, shipping_addresses) = data
+        retailer = random.sample(product_ids.keys(), 1)[0]
         products = self.generate_products(retailer, product_ids)
         shipping_address = self.generate_shipping_address(retailer, shipping_addresses)
         payload = {
@@ -36,6 +37,7 @@ class TestShippingMethods(zinc_suite.ZincSuite):
             }
         result = self.post_request(payload)
         self.verify_response(retailer, result)
+        return result
 
     def verify_response(self, retailer, result):
         nose.tools.assert_equals("shipping_methods_response", result["_type"])

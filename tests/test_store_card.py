@@ -16,13 +16,14 @@ class TestStoreCard(zinc_suite.ZincSuite):
     def test_store_card(self):
         card_data = self.process_data()
         for i in xrange(self.num_tests):
-            card = random.sample(card_data, 1)[0]
-            self.run_single(card)
+            self.run_single(card_data)
 
-    def run_single(self, card):
+    def run_single(self, card_data):
+        card = random.sample(card_data, 1)[0]
         payload = self.create_payload(card)
         result = self.post_request(payload)
         self.verify_response(result, payload)
+        return result
 
     def verify_response(self, result, request_payload):
         nose.tools.assert_equals("store_card_response", result["_type"])

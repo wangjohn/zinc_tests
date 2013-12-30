@@ -15,10 +15,10 @@ class TestVariantOptions(zinc_suite.ZincSuite):
     def test_variant_options(self):
         product_urls = self.process_data()
         for i in xrange(self.num_tests):
-            retailer = random.sample(product_urls.keys(), 1)[0]
-            self.run_single(retailer, product_urls)
+            self.run_single(product_urls)
 
-    def run_single(self, retailer, product_urls):
+    def run_single(self, product_urls):
+        retailer = random.sample(product_urls.keys(), 1)[0]
         url = self.generate_product_url(retailer, product_urls)
         payload = {
             "retailer": retailer,
@@ -26,6 +26,7 @@ class TestVariantOptions(zinc_suite.ZincSuite):
             }
         result = self.post_request(payload)
         self.verify_response(retailer, url, result)
+        return result
 
     def verify_response(self, retailer, url, result):
         nose.tools.assert_equals("variant_options_response", result["_type"])
