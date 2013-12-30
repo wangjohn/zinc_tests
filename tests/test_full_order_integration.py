@@ -28,7 +28,7 @@ class TestFullOrderIntegration(zinc_suite.ZincSuite):
         data = self.process_data(klasses)
 
         for i in xrange(self.num_tests):
-            self.run_single(klasses, data)
+            self.run_review_order(klasses, data)
 
     def run_review_order(self, klasses, data):
         results = {}
@@ -73,6 +73,6 @@ class TestFullOrderIntegration(zinc_suite.ZincSuite):
 
     def select_payment_method(self, store_card_results, klasses):
         return {
-                "security_code": store_card_results["security_code"]
+                "security_code": store_card_results["security_code"],
                 "cc_token": store_card_results["response"]["cc_token"]
                 }
