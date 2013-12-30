@@ -1,6 +1,7 @@
 from test_store_card import TestStoreCard
 from test_variant_options import TestVariantOptions
 from test_shipping_methods import TestShippingMethods
+import random
 
 class TestFullOrderIntegration:
 
@@ -28,9 +29,46 @@ class TestFullOrderIntegration:
             self.run_single(klasses, data)
 
     def run_review_order(self, klasses, data):
-        result = {}
-        for klass_type, klass in klasses.iteritems():
-            result[klass_type] = klass.run_single(data[klass_type])
+        results = {}
+        results["variant_options"] = klasses["variant_options"].run_single(data["variant_options"])
+        selected_retailer = self.select_retailer(results["variant_options"], klasses)
+        selected_variants = self.select_product_variants(results["variant_options"], klasses)
 
-        #TODO: I think I actually have to run something from beginning to end.
+        results["shipping_methods"] = klasses["shipping_methods"].run_retailer_and_products(selected_retailer, selected_variants, data["shipping_methods"])
+        selected_shipping_id = self.select_shipping_id(results["shipping_methods"], klasses)
+        selected_shipping_address = self.select_shipping_address(results["shipping_methods"], klasses)
 
+        results["store_card"] = klasses["store_card"].run_single(data["store_card"])
+        selected_payment_method = self.select_payment_method(results["store_card"], klasses)
+
+        review_order_payload = {
+                "retailer": selected_retailer,
+                "products": selected_variants,
+                "shipping_address": selected_shipping_address,
+                "is_gift": false,
+                "shipping_method_id": selected_shipping_id,
+                "payment_method": selected_payment_method,
+                "customer_email": email_address
+                }
+
+    def select_retailer(self, variant_options_results, klasses):
+        return variant_options_results["retailer"]
+
+    def select_product_variants(self, variant_options_results, klasses):
+        options = variant_options_results["variant_options"]
+        product_ids = [option["product_id"] for option in options]
+        return klasses["shipping_methods"].generate_products(options)
+
+    def select_shipping_id(self, shipping_methods_results, klasses):
+        methods = shipping_methods_results["response"]["shipping_methods"]
+        selected = random.sample(methods, 1)[0]
+        return selected["shipping_method_id"]
+
+    def select_shipping_address(self, shipping_method_results, klasses):
+        return selected_method_results["shipping_address"]
+
+    def select_payment_method(self, store_card_results, klasses):
+        return {
+                "security_code": store_card_results["security_code"]
+                "cc_token": store_card_results["response"]["cc_token"]
+                }

@@ -6,6 +6,7 @@ import collections
 class TestShippingMethods(zinc_suite.ZincSuite):
     zinc_url_stub = "shipping_methods"
     num_products_range = [1,5]
+    product_quantity_range = [1,4]
     data_filenames = ["shipping_methods.csv", "shipping_addresses.csv"]
 
     def process_data(self):
@@ -26,9 +27,13 @@ class TestShippingMethods(zinc_suite.ZincSuite):
             self.run_single(data)
 
     def run_single(self, data):
-        (product_ids, shipping_addresses) = data
+        product_ids, _ = data
         retailer = random.sample(product_ids.keys(), 1)[0]
-        products = self.generate_products(retailer, product_ids)
+        products = self.generate_products(product_ids[retailer])
+        return self.run_retailer_and_products(retailer, products, data)
+
+    def run_retailer_and_products(self, retailer, products, data):
+        _ , shipping_addresses = data
         shipping_address = self.generate_shipping_address(retailer, shipping_addresses)
         payload = {
             "retailer": retailer,
@@ -37,7 +42,7 @@ class TestShippingMethods(zinc_suite.ZincSuite):
             }
         result = self.post_request(payload)
         self.verify_response(retailer, result)
-        return result
+        return {"response": result, "shipping_address": shipping_address}
 
     def verify_response(self, retailer, result):
         nose.tools.assert_equals("shipping_methods_response", result["_type"])
@@ -51,19 +56,22 @@ class TestShippingMethods(zinc_suite.ZincSuite):
             nose.tools.assert_is_not_none(shipping_method["description"])
             nose.tools.assert_greater_equal(shipping_method["price"], 0)
 
-    def generate_products(self, retailer, product_ids):
-        pids = product_ids[retailer]
+    def generate_products(self, product_ids):
         num_products = random.randint(self.num_products_range[0],
-                min(self.num_products_range[1], len(pids)))
-        pids = random.sample(pids, num_products)
+                min(self.num_products_range[1], len(product_ids)))
+        product_ids = random.sample(product_ids, num_products)
 
         result = []
-        for product_id in pids:
+        for product_id in product_ids:
             result.append({
                 "product_id": product_id,
-                "quantity": 1
+                "quantity": self.generate_product_quantity()
                 })
         return result
+
+    def generate_product_quantity(self):
+        return random.randint(self, self.product_quantity_range[0],
+                self.product_quantity_range[1])
 
     def generate_shipping_address(self, retailer, shipping_addresses):
         address = random.sample(shipping_addresses, 1)[0]

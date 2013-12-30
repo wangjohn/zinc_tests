@@ -23,7 +23,7 @@ class TestStoreCard(zinc_suite.ZincSuite):
         payload = self.create_payload(card)
         result = self.post_request(payload)
         self.verify_response(result, payload)
-        return result
+        return {"response": result, "security_code": card[11]}
 
     def verify_response(self, result, request_payload):
         nose.tools.assert_equals("store_card_response", result["_type"])
