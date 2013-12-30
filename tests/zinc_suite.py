@@ -7,8 +7,8 @@ import time
 
 def create_logger(filename):
     full_path = os.path.join(os.path.dirname(__file__), "../logs/", filename)
-    logging.basicConfig(filename=full_path, level=logging.DEBUG, 
-            format='%(asctime)s|%(name)s|%(levelname)s||%(message)s',
+    logging.basicConfig(filename=full_path, level=logging.INFO,
+            format='%(asctime)s|%(name)s|%(levelname)s|%(message)s',
             datefmt='%m/%d/%Y %I:%M:%S%p')
     logger = logging.getLogger(__name__)
     return logger
@@ -44,7 +44,7 @@ class ZincSuite:
 
     def post_request(self, payload):
         self.logger.warn("Posting request. Url: %s, data: %s", self.current_url(), payload)
-        start_time = time.clock()
+        start_time = time.time()
         result = requests.post(self.current_url(), data=json.dumps(payload))
         request_id = result.json()["request_id"]
         self.logger.warn("Request posted. Request id: %s", request_id)
@@ -56,7 +56,7 @@ class ZincSuite:
         if result_json["_type"] == "error" and result_json["code"] == "request_processing":
             return self.wait_for_response(url, request_id, start_time)
         else:
-            end_time = time.clock()
+            end_time = time.time()
             self.logger.warn("Request '%s' time: %s", request_id, end_time - start_time)
             self.logger.warn("Received response: %s", result_json)
             return result_json
