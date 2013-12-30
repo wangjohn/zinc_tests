@@ -55,6 +55,16 @@ class TestFullOrderIntegration(zinc_suite.ZincSuite):
         result = self.post_request(review_order_payload)
         return result
 
+    def verify_review_order_result(self, result, payload):
+        nose.tools.assert_equals("review_order_response", result["_type"])
+        nose.tools.assert_equals(payload["retailer"], result["retailer"])
+        nose.tools.assert_is_not_none(result["place_order_key"])
+        nose.tools.assert_is_not_none(result["price_components"])
+        nose.tools.assert_greater_equal(result["price_components"]["total"])
+        nose.tools.assert_greater_equal(result["price_components"]["tax"])
+        nose.tools.assert_greater_equal(result["price_components"]["shipping"])
+        nose.tools.assert_greater_equal(result["price_components"]["subtotal"])
+
     def select_retailer(self, variant_options_results, klasses):
         return variant_options_results["retailer"]
 
