@@ -70,7 +70,7 @@ class TestShippingMethods(zinc_suite.ZincSuite):
         return result
 
     def generate_product_quantity(self):
-        return random.randint(self, self.product_quantity_range[0],
+        return random.randint(self.product_quantity_range[0],
                 self.product_quantity_range[1])
 
     def generate_shipping_address(self, retailer, shipping_addresses):
