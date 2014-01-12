@@ -42,7 +42,9 @@ class ZincSuite:
         else:
             return self.zinc_base_url
 
-    def post_request(self, payload):
+    def post_request(self, payload, client_token = "zinc_monkey"):
+        if "client_token" not in payload:
+            payload["client_token"] = client_token
         self.logger.warn("Posting request. Url: %s, data: %s", self.current_url(), payload)
         start_time = time.time()
         result = requests.post(self.current_url(), data=json.dumps(payload))
