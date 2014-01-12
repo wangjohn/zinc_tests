@@ -6,7 +6,10 @@ import logging
 import time
 
 def create_logger(filename):
-    full_path = os.path.join(os.path.dirname(__file__), "../logs/", filename)
+    directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../logs/")
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    full_path = os.path.join(directory, filename)
     logging.basicConfig(filename=full_path, level=logging.INFO,
             format='%(asctime)s|%(name)s|%(levelname)s|%(message)s',
             datefmt='%m/%d/%Y %I:%M:%S%p')
