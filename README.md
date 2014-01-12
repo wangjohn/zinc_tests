@@ -4,10 +4,11 @@ Zinc Tests
 Installation
 ============
 
-The only thing that this test suite requires is to install nose:
+The only things that this test suite requires is to install nose and requests:
 
 ```
 pip install nose
+pip install requests
 ```
 
 If that doesn't work, read the documentation for nose: `http://nose.readthedocs.org/en/latest/`.

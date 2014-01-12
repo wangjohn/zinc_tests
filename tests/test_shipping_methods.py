@@ -4,18 +4,25 @@ import zinc_suite
 import collections
 
 class TestShippingMethods(zinc_suite.ZincSuite):
+
+    def generate_data_filenames(retailers):
+        data_filenames = ["shipping_addresses.csv"]
+        for retailer in retailers:
+            data_filenames.append(retailer + "/shipping_methods.csv")
+        return data_filenames
+
     zinc_url_stub = "shipping_methods"
     num_products_range = [1,5]
     product_quantity_range = [1,4]
-    data_filenames = ["shipping_methods.csv", "shipping_addresses.csv"]
+    data_filenames = generate_data_filenames(zinc_suite.ZincSuite.retailers)
 
     def process_data(self):
         shipping_methods = collections.defaultdict(list)
         shipping_addresses = []
 
-        for line, filename in self.read_data():
+        for retailer, line, filename in self.read_data():
             if filename.endswith("shipping_methods.csv"):
-                shipping_methods[line[0]].append(line[1])
+                shipping_methods[retailer].append(line[0])
             else:
                 shipping_addresses.append(line)
 

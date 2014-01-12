@@ -8,7 +8,7 @@ class TestStoreCard(zinc_suite.ZincSuite):
 
     def process_data(self):
         card_data = []
-        for line, filename in self.read_data():
+        for retailer, line, filename in self.read_data():
             card_data.append(line)
 
         return card_data
