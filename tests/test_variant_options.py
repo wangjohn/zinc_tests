@@ -21,6 +21,7 @@ class TestVariantOptions(zinc_suite.ZincSuite):
         retailer = random.sample(product_urls.keys(), 1)[0]
         url = self.generate_product_url(retailer, product_urls)
         payload = {
+            "client_token": "zinc_monkey",
             "retailer": retailer,
             "product_url": url
             }

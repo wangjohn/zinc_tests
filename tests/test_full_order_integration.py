@@ -44,6 +44,7 @@ class TestFullOrderIntegration(zinc_suite.ZincSuite):
         selected_payment_method = self.select_payment_method(results["store_card"], klasses)
 
         review_order_payload = {
+                "client_token": "zinc_monkey",
                 "retailer": selected_retailer,
                 "products": selected_variants,
                 "shipping_address": selected_shipping_address,
