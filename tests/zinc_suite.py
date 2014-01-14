@@ -18,8 +18,8 @@ def create_logger(filename):
 
 class ZincSuite:
     num_tests = 1
-    # zinc_base_url = "https://demotwo.zinc.io/v0"
-    zinc_base_url = "http://localhost:5000/v0"
+    zinc_base_url = "http://api.zinc.io/v0"
+    #zinc_base_url = "http://localhost:5000/v0"
     zinc_url_stub = None
     data_filenames = None
     test_data_path = os.path.join(os.path.dirname(__file__), "../test_data/")
