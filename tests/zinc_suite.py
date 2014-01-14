@@ -31,8 +31,6 @@ class ZincSuite:
             if self.data_filenames == None:
                 retailer_path = os.path.join(self.test_data_path, retailer, self.zinc_url_stub + ".csv")
                 non_retailer_path = os.path.join(self.test_data_path, self.zinc_url_stub + ".csv")
-                print os.path.exists(retailer_path)
-                print os.path.exists(non_retailer_path)
                 if os.path.exists(retailer_path):
                     filenames = [retailer_path]
                 elif os.path.exists(non_retailer_path):

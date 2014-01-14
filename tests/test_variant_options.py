@@ -21,6 +21,7 @@ class TestVariantOptions(zinc_suite.ZincSuite):
         retailer = random.sample(product_urls.keys(), 1)[0]
         url = self.generate_product_url(retailer, product_urls)
         payload = {
+            "client_token": "zinc_monkey",
             "retailer": retailer,
             "product_url": url
             }
@@ -39,7 +40,7 @@ class TestVariantOptions(zinc_suite.ZincSuite):
             nose.tools.assert_equals("variant_option", variant_option["_type"])
             # nose.tools.assert_greater_equal(variant_option["unit_price"], 0)
             nose.tools.assert_is_not_none(variant_option["product_id"])
-            nose.tools.assert_is_not_none(variant_option["dimensions"])
+            # nose.tools.assert_is_not_none(variant_option["dimensions"])
             for dimension in variant_option["dimensions"]:
                 nose.tools.assert_is_not_none(dimension["name"])
                 nose.tools.assert_is_not_none(dimension["value"])
