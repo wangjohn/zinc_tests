@@ -29,3 +29,9 @@ You can also run tests in a specific file by specifying the filename, like so:
 ```
 nosetests --nologcapture test_variant_options.py
 ```
+
+To run tests concurrently, you can do something like this:
+
+```
+nosetests --processes=4 --process-timeout=120 --logging-level=WARN
+```

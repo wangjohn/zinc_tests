@@ -6,7 +6,10 @@ import logging
 import time
 
 def create_logger(filename):
-    full_path = os.path.join(os.path.dirname(__file__), "../logs/", filename)
+    directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../logs/")
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    full_path = os.path.join(directory, filename)
     logging.basicConfig(filename=full_path, level=logging.INFO,
             format='%(asctime)s|%(name)s|%(levelname)s|%(message)s',
             datefmt='%m/%d/%Y %I:%M:%S%p')
@@ -15,8 +18,8 @@ def create_logger(filename):
 
 class ZincSuite:
     num_tests = 1
-    # zinc_base_url = "https://demotwo.zinc.io/v0"
-    zinc_base_url = "http://localhost:5000/v0"
+    zinc_base_url = "http://api.zinc.io/v0"
+    #zinc_base_url = "http://localhost:5000/v0"
     zinc_url_stub = None
     data_filenames = None
     test_data_path = os.path.join(os.path.dirname(__file__), "../test_data/")

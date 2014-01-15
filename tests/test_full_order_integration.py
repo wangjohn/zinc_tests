@@ -72,7 +72,7 @@ class TestFullOrderIntegration(zinc_suite.ZincSuite):
     def select_product_variants(self, variant_options_results, klasses):
         options = variant_options_results["variant_options"]
         product_ids = [option["product_id"] for option in options]
-        return klasses["shipping_methods"].generate_products(options)
+        return klasses["shipping_methods"].generate_products(product_ids)
 
     def select_shipping_id(self, shipping_methods_results, klasses):
         methods = shipping_methods_results["response"]["shipping_methods"]
