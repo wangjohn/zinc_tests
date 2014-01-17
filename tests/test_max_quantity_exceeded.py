@@ -20,7 +20,7 @@ class TestMaxQuantityExceeded(zinc_suite.ZincSuite):
         shipping_addresses = []
 
         for retailer, line, filename in self.read_data():
-            if filename.endswith("product_unavailable.csv"):
+            if filename.endswith("max_quantity_exceeded.csv"):
                 shipping_methods[retailer].append(line)
             else:
                 shipping_addresses.append(line)
@@ -34,6 +34,7 @@ class TestMaxQuantityExceeded(zinc_suite.ZincSuite):
 
     def run_single(self, data):
         products_hash, _ = data
+        print products_hash
         retailer = random.sample(products_hash.keys(), 1)[0]
         products = self.generate_products(products_hash[retailer])
         return self.run_retailer_and_products(retailer, products, data)
@@ -57,8 +58,8 @@ class TestMaxQuantityExceeded(zinc_suite.ZincSuite):
 
     def generate_products(self, products_list):
         num_products = random.randint(self.num_products_range[0],
-                min(self.num_products_range[1], len(product_ids)))
-        products_used = random.sample(product_ids, num_products)
+                min(self.num_products_range[1], len(products_list)))
+        products_used = random.sample(products_list, num_products)
 
         result = []
         for product in products_used:
