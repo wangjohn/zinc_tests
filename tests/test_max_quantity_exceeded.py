@@ -3,17 +3,16 @@ import nose.tools
 import zinc_suite
 import collections
 
-class TestProductUnavailable(zinc_suite.ZincSuite):
+class TestMaxQuantityExceeded(zinc_suite.ZincSuite):
 
     def generate_data_filenames(retailers):
         data_filenames = ["shipping_addresses.csv"]
         for retailer in retailers:
-            data_filenames.append(retailer + "/product_unavailable.csv")
+            data_filenames.append(retailer + "/max_quantity_exceeded.csv")
         return data_filenames
 
     zinc_url_stub = "shipping_methods"
     num_products_range = [1,5]
-    product_quantity_range = [1,2]
     data_filenames = generate_data_filenames(zinc_suite.ZincSuite.retailers)
 
     def process_data(self):
@@ -22,7 +21,7 @@ class TestProductUnavailable(zinc_suite.ZincSuite):
 
         for retailer, line, filename in self.read_data():
             if filename.endswith("product_unavailable.csv"):
-                shipping_methods[retailer].append(line[0])
+                shipping_methods[retailer].append(line)
             else:
                 shipping_addresses.append(line)
 
@@ -34,9 +33,9 @@ class TestProductUnavailable(zinc_suite.ZincSuite):
             self.run_single(data)
 
     def run_single(self, data):
-        product_ids, _ = data
-        retailer = random.sample(product_ids.keys(), 1)[0]
-        products = self.generate_products(product_ids[retailer])
+        products_hash, _ = data
+        retailer = random.sample(products_hash.keys(), 1)[0]
+        products = self.generate_products(products_hash[retailer])
         return self.run_retailer_and_products(retailer, products, data)
 
     def run_retailer_and_products(self, retailer, products, data):
@@ -54,24 +53,20 @@ class TestProductUnavailable(zinc_suite.ZincSuite):
 
     def verify_response(self, retailer, result):
         nose.tools.assert_equals("error", result["_type"])
-        nose.tools.assert_equals("product_unavailable_response", result["code"])
+        nose.tools.assert_equals("max_quantity_exceeded", result["code"])
 
-    def generate_products(self, product_ids):
+    def generate_products(self, products_list):
         num_products = random.randint(self.num_products_range[0],
                 min(self.num_products_range[1], len(product_ids)))
-        product_ids = random.sample(product_ids, num_products)
+        products_used = random.sample(product_ids, num_products)
 
         result = []
-        for product_id in product_ids:
+        for product in products_used:
             result.append({
-                "product_id": product_id,
-                "quantity": self.generate_product_quantity()
+                "product_id": product[0],
+                "quantity": product[1]
                 })
         return result
-
-    def generate_product_quantity(self):
-        return random.randint(self.product_quantity_range[0],
-                self.product_quantity_range[1])
 
     def generate_shipping_address(self, retailer, shipping_addresses):
         address = random.sample(shipping_addresses, 1)[0]
